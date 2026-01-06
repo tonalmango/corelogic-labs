@@ -95,6 +95,7 @@ app.use((req, res, next) => {
 
 // Connect to MongoDB
 console.log('Attempting MongoDB connection...');
+console.log('MongoDB URI configured:', process.env.MONGODB_URI ? 'Yes' : 'No');
 try {
     mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogiclabs', {
         useNewUrlParser: true,
