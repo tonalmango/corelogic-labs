@@ -36,7 +36,10 @@ exports.submitQuote = async (req, res, next) => {
             userAgent: req.headers['user-agent']
         });
 
-        await transporter.sendMail({
+        // Send emails (skip if email not configured)
+        if (process.env.EMAIL_USER && process.env.EMAIL_USER !== 'yourbusiness@gmail.com') {
+            try {
+                await transporter.sendMail({
             from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
             to: email,
             subject: 'Your Quote Request Received',
@@ -77,6 +80,11 @@ exports.submitQuote = async (req, res, next) => {
                 </div>
             `
         });
+            } catch (emailError) {
+                // Log email error but don't fail the request
+                console.error('Email sending failed:', emailError.message);
+            }
+        }
 
         res.status(201).json({
             status: 'success',
