@@ -67,7 +67,7 @@ app.use((req, res, next) => {
     next();
 });
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/whiteLabelAgency', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogiclabs', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -86,7 +86,7 @@ app.use('/api/contacts', contactRoutes);
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'success',
-        message: 'White-Label Agency API is running',
+        message: 'CoreLogic Labs API is running',
         timestamp: new Date().toISOString(),
         uptime: process.uptime()
     });

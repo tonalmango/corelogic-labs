@@ -34,7 +34,7 @@ exports.submitContact = async (req, res, next) => {
         });
 
         await transporter.sendMail({
-            from: `"White-Label Agency" <${process.env.EMAIL_FROM}>`,
+            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
             to: email,
             subject: 'Thank You for Contacting Us',
             html: `
@@ -46,7 +46,7 @@ exports.submitContact = async (req, res, next) => {
                     <p style="padding: 15px; background-color: #f3f4f6; border-left: 3px solid #6366f1;">
                         ${message}
                     </p>
-                    <p>Best regards,<br>The White-Label Agency Team</p>
+                    <p>Best regards,<br>The CoreLogic Labs Team</p>
                     <hr>
                     <p style="color: #666; font-size: 12px;">
                         This is an automated message. Please do not reply to this email.
@@ -56,7 +56,7 @@ exports.submitContact = async (req, res, next) => {
         });
 
         await transporter.sendMail({
-            from: `"White-Label Agency" <${process.env.EMAIL_FROM}>`,
+            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
             to: process.env.EMAIL_USER,
             subject: 'New Contact Form Submission',
             html: `

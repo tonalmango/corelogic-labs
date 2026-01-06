@@ -37,7 +37,7 @@ exports.submitQuote = async (req, res, next) => {
         });
 
         await transporter.sendMail({
-            from: `"White-Label Agency" <${process.env.EMAIL_FROM}>`,
+            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
             to: email,
             subject: 'Your Quote Request Received',
             html: `
@@ -49,8 +49,8 @@ exports.submitQuote = async (req, res, next) => {
                         ${services.map(service => `<li>${service}</li>`).join('')}
                     </ul>
                     <p><strong>Budget Range:</strong> ${budget}</p>
-                    <p>Our team will review your request and get back to you within 24 hours with a custom white-label quote.</p>
-                    <p>Best regards,<br>The White-Label Agency Team</p>
+                    <p>Our team will review your request and get back to you within 24 hours with a custom quote.</p>
+                    <p>Best regards,<br>The CoreLogic Labs Team</p>
                     <hr>
                     <p style="color: #666; font-size: 12px;">
                         This is an automated message. Please do not reply to this email.
@@ -60,7 +60,7 @@ exports.submitQuote = async (req, res, next) => {
         });
 
         await transporter.sendMail({
-            from: `"White-Label Agency" <${process.env.EMAIL_FROM}>`,
+            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
             to: process.env.EMAIL_USER,
             subject: 'New Quote Request Submitted',
             html: `
@@ -171,7 +171,7 @@ exports.updateQuote = async (req, res, next) => {
         
         if (status === 'quoted' && quoteAmount) {
             await transporter.sendMail({
-                from: `"White-Label Agency" <${process.env.EMAIL_FROM}>`,
+                from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
                 to: quote.email,
                 subject: 'Your Custom Quote is Ready',
                 html: `
@@ -186,7 +186,7 @@ exports.updateQuote = async (req, res, next) => {
                             ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ''}
                         </div>
                         <p>Please reply to this email to proceed with the next steps.</p>
-                        <p>Best regards,<br>The White-Label Agency Team</p>
+                        <p>Best regards,<br>The CoreLogic Labs Team</p>
                     </div>
                 `
             });

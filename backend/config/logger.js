@@ -10,7 +10,7 @@ const logger = winston.createLogger({
         winston.format.errors({ stack: true }),
         winston.format.json()
     ),
-    defaultMeta: { service: 'white-label-agency' },
+    defaultMeta: { service: 'corelogic-labs' },
     transports: [
         new winston.transports.File({
             filename: path.join(logsDir, 'error.log'),
