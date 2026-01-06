@@ -20,5 +20,7 @@ router.post('/login', loginValidationRules, authController.login);
 router.post('/logout', authMiddleware.protect, authController.logout);
 router.get('/me', authMiddleware.protect, authController.getMe);
 router.patch('/updatePassword', authMiddleware.protect, authController.updatePassword);
+// One-time admin promotion (guarded by ADMIN_SETUP_TOKEN header)
+router.post('/promote', authController.promoteToAdmin);
 
 module.exports = router;

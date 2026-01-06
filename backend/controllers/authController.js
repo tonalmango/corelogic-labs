@@ -166,3 +166,43 @@ exports.updatePassword = async (req, res, next) => {
         next(error);
     }
 };
+
+// One-time admin promotion endpoint guarded by setup token
+exports.promoteToAdmin = async (req, res, next) => {
+    try {
+        const setupToken = req.headers['x-setup-token'];
+        if (!process.env.ADMIN_SETUP_TOKEN) {
+            return res.status(403).json({
+                status: 'error',
+                message: 'ADMIN_SETUP_TOKEN is not configured on the server'
+            });
+        }
+        if (!setupToken || setupToken !== process.env.ADMIN_SETUP_TOKEN) {
+            return res.status(403).json({
+                status: 'error',
+                message: 'Invalid setup token'
+            });
+        }
+
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ status: 'error', message: 'Email is required' });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ status: 'error', message: 'User not found' });
+        }
+
+        user.role = 'admin';
+        await user.save({ validateBeforeSave: false });
+
+        res.status(200).json({
+            status: 'success',
+            message: `User ${email} promoted to admin`,
+            data: { user: { id: user._id, email: user.email, name: user.name, role: user.role } }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
