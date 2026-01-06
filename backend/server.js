@@ -155,6 +155,37 @@ app.get('/api/test/mongodb', async (req, res) => {
     }
 });
 
+// View backup quotes (when MongoDB is unavailable)
+app.get('/api/quotes/backup', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        const quotesFile = path.join(__dirname, 'quotes-backup.json');
+        
+        if (fs.existsSync(quotesFile)) {
+            const data = fs.readFileSync(quotesFile, 'utf8');
+            const quotes = JSON.parse(data);
+            res.json({
+                status: 'success',
+                count: quotes.length,
+                data: { quotes }
+            });
+        } else {
+            res.json({
+                status: 'success',
+                count: 0,
+                data: { quotes: [] },
+                message: 'No backup quotes found yet'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+});
+
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
