@@ -42,14 +42,26 @@ const AuthManager = {
     updateUI() {
         const authNavItem = document.getElementById('authNavItem');
         const userNavItem = document.getElementById('userNavItem');
-        const userEmail = document.getElementById('userEmail');
+        const userAvatar = document.getElementById('userAvatar');
+        const adminDashboardLink = document.getElementById('adminDashboardLink');
         
         if (this.isAuthenticated()) {
             const user = this.getUser();
             authNavItem.style.display = 'none';
             userNavItem.style.display = 'flex';
-            if (userEmail && user) {
-                userEmail.textContent = user.email;
+            
+            // Show user's first initial in avatar
+            if (userAvatar && user && user.name) {
+                const initial = user.name.charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.title = user.name;
+            }
+            
+            // Show admin dashboard link only for admins
+            if (adminDashboardLink && user && user.role === 'admin') {
+                adminDashboardLink.style.display = 'flex';
+            } else if (adminDashboardLink) {
+                adminDashboardLink.style.display = 'none';
             }
         } else {
             authNavItem.style.display = 'block';
@@ -289,11 +301,22 @@ function initAuth() {
                 const data = await response.json();
                 if (response.ok) {
                     AuthManager.setToken(data.token);
-                    AuthManager.setUser({ email: data.data.user.email, name: data.data.user.name });
+                    AuthManager.setUser({ 
+                        email: data.data.user.email, 
+                        name: data.data.user.name,
+                        role: data.data.user.role
+                    });
                     AuthManager.updateUI();
                     loginModal.style.display = 'none';
                     loginForm.reset();
                     showNotification('success', 'Logged in successfully!');
+                    
+                    // Auto-redirect admin to dashboard
+                    if (data.data.user.role === 'admin') {
+                        setTimeout(() => {
+                            window.location.href = 'admin.html';
+                        }, 500);
+                    }
                 } else {
                     showNotification('error', data.message || 'Login failed');
                 }
@@ -325,11 +348,22 @@ function initAuth() {
                 const data = await response.json();
                 if (response.ok) {
                     AuthManager.setToken(data.token);
-                    AuthManager.setUser({ email: data.data.user.email, name: data.data.user.name });
+                    AuthManager.setUser({ 
+                        email: data.data.user.email, 
+                        name: data.data.user.name,
+                        role: data.data.user.role
+                    });
                     AuthManager.updateUI();
                     registerModal.style.display = 'none';
                     registerForm.reset();
                     showNotification('success', 'Account created successfully!');
+                    
+                    // Auto-redirect admin to dashboard
+                    if (data.data.user.role === 'admin') {
+                        setTimeout(() => {
+                            window.location.href = 'admin.html';
+                        }, 500);
+                    }
                 } else {
                     showNotification('error', data.message || 'Registration failed');
                 }
@@ -338,6 +372,34 @@ function initAuth() {
             }
         });
     }
+    
+    // User dropdown toggle
+    const userAvatar = document.getElementById('userAvatar');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const adminDashboardLink = document.getElementById('adminDashboardLink');
+    
+    if (userAvatar) {
+        userAvatar.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isVisible = dropdownMenu.style.display !== 'none';
+            dropdownMenu.style.display = isVisible ? 'none' : 'flex';
+            dropdownMenu.style.flexDirection = 'column';
+        });
+    }
+    
+    if (adminDashboardLink) {
+        adminDashboardLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'admin.html';
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (userAvatar && dropdownMenu && !e.target.closest('.user-dropdown')) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
     
     window.addEventListener('click', (e) => {
         if (e.target === loginModal) loginModal.style.display = 'none';

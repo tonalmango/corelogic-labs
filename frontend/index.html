@@ -35,8 +35,13 @@
                         <a href="#" id="loginBtn" class="btn-outline" title="Login to request a quote">Login</a>
                     </li>
                     <li id="userNavItem" style="display: none;">
-                        <a href="#" id="userEmail" style="color: var(--primary);"></a>
-                        <a href="#" id="logoutBtn" class="btn-outline">Logout</a>
+                        <div id="userDropdown" class="user-dropdown">
+                            <button id="userAvatar" class="user-avatar" title="User Profile"></button>
+                            <div id="dropdownMenu" class="dropdown-menu" style="display: none;">
+                                <a href="#" id="adminDashboardLink" style="display: none;"><i class="fas fa-chart-line"></i> Admin Dashboard</a>
+                                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
                     </li>
                 </ul>
                 

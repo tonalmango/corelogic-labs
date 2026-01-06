@@ -1,23 +1,52 @@
 // Admin Panel Script
 const API_BASE_URL = window.API_BASE_URL || 'http://localhost:5000/api';
-let authToken = localStorage.getItem('authToken');
 
-// Check if user is authenticated
-function checkAuth() {
-    if (!authToken) {
-        window.location.href = 'login.html';
-        return false;
+// Auth Manager 
+const AuthManager = {
+    getToken() {
+        return localStorage.getItem('authToken');
+    },
+    
+    getUser() {
+        const user = localStorage.getItem('authUser');
+        return user ? JSON.parse(user) : null;
+    },
+    
+    isAuthenticated() {
+        return !!this.getToken();
+    },
+    
+    isAdmin() {
+        const user = this.getUser();
+        return user && user.role === 'admin';
     }
-    return true;
-}
+};
 
-// API helper with auth
+// Check authentication on page load
+window.addEventListener('DOMContentLoaded', () => {
+    // Redirect to home if not authenticated or not admin
+    if (!AuthManager.isAuthenticated() || !AuthManager.isAdmin()) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    loadDashboard();
+});
+
+// API helper with JWT
 async function apiCall(endpoint, method = 'GET', data = null) {
+    const token = AuthManager.getToken();
+    
+    if (!token) {
+        window.location.href = 'index.html';
+        return null;
+    }
+    
     const options = {
         method,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
+            'Authorization': `Bearer ${token}`
         }
     };
 
@@ -28,55 +57,44 @@ async function apiCall(endpoint, method = 'GET', data = null) {
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
 
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 403) {
             localStorage.removeItem('authToken');
-            window.location.href = 'login.html';
+            localStorage.removeItem('authUser');
+            window.location.href = 'index.html';
             return null;
         }
 
         const result = await response.json();
         return response.ok ? result : { error: result.message };
     } catch (error) {
-        // API error - silent in production
+        console.error('API error:', error);
         return { error: 'Network error' };
     }
 }
 
 // Load dashboard stats
 async function loadDashboard() {
-    if (!checkAuth()) return;
-
-    // Load quote stats
-    const quoteStatsRes = await apiCall('/quotes/stats');
-    if (quoteStatsRes && quoteStatsRes.data) {
-        const stats = quoteStatsRes.data.summary;
-        document.getElementById('total-quotes').textContent = stats.totalQuotes || 0;
-        
-        const pending = stats.statusCounts?.find(s => s.status === 'pending')?.count || 0;
-        document.getElementById('pending-quotes').textContent = pending;
-        
-        document.getElementById('total-revenue').textContent = '$' + (stats.totalQuoteAmount || 0).toLocaleString();
-    }
-
     // Load quotes
     const quotesRes = await apiCall('/quotes?limit=10');
     if (quotesRes && quotesRes.data) {
-        displayQuotes(quotesRes.data.quotes);
+        displayQuotes(quotesRes.data.quotes || quotesRes.data);
     }
 
     // Load contacts
     const contactsRes = await apiCall('/contacts?limit=10');
     if (contactsRes && contactsRes.data) {
-        displayContacts(contactsRes.data.contacts);
+        displayContacts(contactsRes.data.contacts || contactsRes.data);
     }
 
     // Load user info
-    const userRes = await apiCall('/auth/me');
-    if (userRes && userRes.data) {
-        document.getElementById('user-name').textContent = userRes.data.user.name;
+    const user = AuthManager.getUser();
+    if (user && document.getElementById('user-name')) {
+        document.getElementById('user-name').textContent = user.name || user.email;
     }
 
-    document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+    if (document.getElementById('last-updated')) {
+        document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+    }
 }
 
 // Display quotes table
