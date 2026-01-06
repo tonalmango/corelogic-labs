@@ -6,6 +6,10 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
+// Set Mongoose default query timeout
+mongoose.set('bufferTimeoutMS', 30000); // 30 seconds instead of 10
+mongoose.set('maxTimeMS', 30000);
+
 const quoteRoutes = require('./routes/quoteRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -94,6 +98,11 @@ try {
     mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogiclabs', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        maxPoolSize: 10,
+        minPoolSize: 2,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        family: 4 // Use IPv4, skip trying IPv6
     })
     .then(() => {
         console.log('✓ MongoDB connected successfully');
