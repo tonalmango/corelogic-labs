@@ -75,3 +75,23 @@
     gap: 1rem;
     align-items: center;
 }
+
+/* Tooltip for login button */
+#loginBtn {
+    position: relative;
+}
+
+#loginBtn:hover::after {
+    content: 'Login to request a quote';
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f172a;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+}

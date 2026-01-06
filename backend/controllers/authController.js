@@ -29,11 +29,15 @@ exports.register = async (req, res, next) => {
             });
         }
 
+        // If no admin exists yet, auto-promote this registered user to admin
+        const adminCount = await User.countDocuments({ role: 'admin' });
+        const role = adminCount === 0 ? 'admin' : 'user';
+
         const user = await User.create({
             email,
             password,
             name,
-            role: 'user'
+            role
         });
 
         const token = generateToken(user._id);
