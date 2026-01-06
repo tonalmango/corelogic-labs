@@ -13,7 +13,7 @@ const quoteValidationRules = [
     body('details').optional().trim().isLength({ max: 2000 }).withMessage('Details cannot exceed 2000 characters')
 ];
 
-router.post('/', quoteValidationRules, quoteController.submitQuote);
+router.post('/', authMiddleware.protect, quoteValidationRules, quoteController.submitQuote);
 
 router.use(authMiddleware.protect);
 router.get('/', authMiddleware.restrictTo('admin'), quoteController.getAllQuotes);

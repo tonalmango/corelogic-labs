@@ -1,6 +1,63 @@
 // Base URL for API
 const API_BASE_URL = window.API_BASE_URL || 'http://localhost:5000/api';
 
+// ===== Authentication Management =====
+const AuthManager = {
+    getToken() {
+        return localStorage.getItem('authToken');
+    },
+    
+    setToken(token) {
+        localStorage.setItem('authToken', token);
+    },
+    
+    removeToken() {
+        localStorage.removeItem('authToken');
+    },
+    
+    getUser() {
+        const user = localStorage.getItem('authUser');
+        return user ? JSON.parse(user) : null;
+    },
+    
+    setUser(user) {
+        localStorage.setItem('authUser', JSON.stringify(user));
+    },
+    
+    removeUser() {
+        localStorage.removeItem('authUser');
+    },
+    
+    isAuthenticated() {
+        return !!this.getToken();
+    },
+    
+    logout() {
+        this.removeToken();
+        this.removeUser();
+        this.updateUI();
+        showNotification('success', 'Logged out successfully');
+    },
+    
+    updateUI() {
+        const authNavItem = document.getElementById('authNavItem');
+        const userNavItem = document.getElementById('userNavItem');
+        const userEmail = document.getElementById('userEmail');
+        
+        if (this.isAuthenticated()) {
+            const user = this.getUser();
+            authNavItem.style.display = 'none';
+            userNavItem.style.display = 'flex';
+            if (userEmail && user) {
+                userEmail.textContent = user.email;
+            }
+        } else {
+            authNavItem.style.display = 'block';
+            userNavItem.style.display = 'none';
+        }
+    }
+};
+
 // ===== Mobile Menu Toggle (Simple & Robust) =====
 const initMobileMenu = () => {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -64,6 +121,13 @@ const initQuoteForm = () => {
     console.log('Adding submit event listener to quote form');
     quoteForm.addEventListener('submit', async function(e) {
         console.log('Form submitted!');
+        
+                // Check if user is authenticated
+                if (!AuthManager.isAuthenticated()) {
+                    showNotification('error', 'Please login to request a quote');
+                    document.getElementById('loginModal').style.display = 'flex';
+                    return;
+                }
         e.preventDefault();
         
         // Get selected services with null check
@@ -107,6 +171,7 @@ const initQuoteForm = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthManager.getToken()}`
                 },
                 body: JSON.stringify(formData)
             });
@@ -154,29 +219,130 @@ console.log('Script loaded, DOM state:', document.readyState);
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initQuoteForm();
-        // Also add click listener to button as debug
-        const submitBtn = document.querySelector('#quoteForm button[type="submit"]');
-        if (submitBtn) {
-            console.log('Submit button found:', submitBtn);
-            submitBtn.addEventListener('click', (e) => {
-                console.log('Button clicked! Event:', e);
-            });
-        } else {
-            console.error('Submit button not found!');
-        }
+        initAuth();
     });
 } else {
     initQuoteForm();
-    // Also add click listener to button as debug
-    const submitBtn = document.querySelector('#quoteForm button[type="submit"]');
-    if (submitBtn) {
-        console.log('Submit button found:', submitBtn);
-        submitBtn.addEventListener('click', (e) => {
-            console.log('Button clicked! Event:', e);
+    initAuth();
+}
+
+// ===== Authentication UI & Handlers =====
+function initAuth() {
+    AuthManager.updateUI();
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const closeLogin = document.getElementById('closeLogin');
+    const closeRegister = document.getElementById('closeRegister');
+    const switchToRegister = document.getElementById('switchToRegister');
+    const switchToLogin = document.getElementById('switchToLogin');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
         });
-    } else {
-        console.error('Submit button not found!');
     }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            AuthManager.logout();
+        });
+    }
+    
+    if (closeLogin) closeLogin.addEventListener('click', () => loginModal.style.display = 'none');
+    if (closeRegister) closeRegister.addEventListener('click', () => registerModal.style.display = 'none');
+    
+    if (switchToRegister) {
+        switchToRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+        });
+    }
+    
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    AuthManager.setToken(data.token);
+                    AuthManager.setUser({ email: data.data.user.email, name: data.data.user.name });
+                    AuthManager.updateUI();
+                    loginModal.style.display = 'none';
+                    loginForm.reset();
+                    showNotification('success', 'Logged in successfully!');
+                } else {
+                    showNotification('error', data.message || 'Login failed');
+                }
+            } catch (error) {
+                showNotification('error', 'Network error. Please try again.');
+            }
+        });
+    }
+    
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                showNotification('error', 'Passwords do not match');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    AuthManager.setToken(data.token);
+                    AuthManager.setUser({ email: data.data.user.email, name: data.data.user.name });
+                    AuthManager.updateUI();
+                    registerModal.style.display = 'none';
+                    registerForm.reset();
+                    showNotification('success', 'Account created successfully!');
+                } else {
+                    showNotification('error', data.message || 'Registration failed');
+                }
+            } catch (error) {
+                showNotification('error', 'Network error. Please try again.');
+            }
+        });
+    }
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) loginModal.style.display = 'none';
+        if (e.target === registerModal) registerModal.style.display = 'none';
+    });
 }
 
 // Helper function to show notifications
