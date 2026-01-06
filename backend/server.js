@@ -9,6 +9,7 @@ require('dotenv').config();
 // Set Mongoose default query timeout
 mongoose.set('bufferTimeoutMS', 30000); // 30 seconds instead of 10
 mongoose.set('maxTimeMS', 30000);
+mongoose.set('bufferCommands', false); // Don't buffer commands if not connected
 
 const quoteRoutes = require('./routes/quoteRoutes');
 const contactRoutes = require('./routes/contactRoutes');
@@ -126,6 +127,33 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/analytics', analyticsRoutes);
+
+// Test MongoDB connection
+app.get('/api/test/mongodb', async (req, res) => {
+    try {
+        const mongooseState = mongoose.connection.readyState;
+        const states = {
+            0: 'disconnected',
+            1: 'connected',
+            2: 'connecting',
+            3: 'disconnecting'
+        };
+        
+        res.json({
+            status: 'ok',
+            mongooseState: states[mongooseState],
+            mongooseReadyState: mongooseState,
+            mongodbConnected: mongooseState === 1,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));

@@ -24,6 +24,20 @@ exports.submitQuote = async (req, res, next) => {
 
         const { name, agencyName, email, phone, services, budget, details } = req.body;
 
+        console.log('Creating quote with data:', { name, agencyName, email, services, budget });
+        
+        // Check if MongoDB is connected
+        const mongooseState = require('mongoose').connection.readyState;
+        console.log('Mongoose connection state:', mongooseState, '(0=disconnected, 1=connected, 2=connecting)');
+        
+        if (mongooseState !== 1) {
+            console.error('MongoDB not connected! Cannot save quote.');
+            return res.status(503).json({
+                status: 'error',
+                message: 'Database connection unavailable. Please try again in a moment.'
+            });
+        }
+
         const quote = await Quote.create({
             name,
             agencyName,
