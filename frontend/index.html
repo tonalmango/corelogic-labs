@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreLogic Labs | Digital Solutions & Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Auto-detect API URL - works with Render.com free domains
+        window.API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000/api'
+            : window.location.protocol + '//corelogic-labs-api.onrender.com/api';
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <i class="fas fa-flask"></i> CoreLogic Labs
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#process">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Digital Solutions & Custom Development</h1>
+                    <p>CoreLogic Labs provides professional digital services including AI-powered websites, chatbots, automation, and custom software development. We deliver quality solutions tailored to your business needs.</p>
+                    <div class="hero-btns">
+                        <a href="#contact" class="btn btn-primary">Get Custom Quote</a>
+                        <a href="#services" class="btn btn-secondary">View Services</a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="floating-card card-1">
+                        <div class="card-icon blue">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h4>AI Chatbots</h4>
+                            <p>24/7 Customer Support</p>
+                        </div>
+                    </div>
+                    
+                    <div class="floating-card card-2">
+                        <div class="card-icon purple">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h4>Fast Delivery</h4>
+                            <p>7-14 Days Turnaround</p>
+                        </div>
+                    </div>
+                    
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="50" width="300" height="200" rx="15" fill="white" stroke="#6366f1" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="30" fill="#8b5cf6" opacity="0.7"/>
+                        <circle cx="200" cy="150" r="25" fill="#10b981" opacity="0.7"/>
+                        <circle cx="300" cy="120" r="20" fill="#f59e0b" opacity="0.7"/>
+                        <rect x="80" y="180" width="240" height="40" rx="5" fill="#e2e8f0"/>
+                        <rect x="80" y="230" width="100" height="20" rx="5" fill="#6366f1"/>
+                        <rect x="200" y="230" width="120" height="20" rx="5" fill="#8b5cf6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Services</h2>
+                <p>We deliver premium digital solutions that you can resell under your own brand. No attribution required - your clients will never know we exist.</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Service 1 -->
+                <div class="service-card">
+                    <div class="service-icon web">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Business Websites</h3>
+                    <p>Professional, responsive websites tailored to your client's brand. Built with modern frameworks and optimized for performance.</p>
+                    <div class="service-price">From $99</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card">
+                    <div class="service-icon landing">
+                        <i class="fas fa-window-restore"></i>
+                    </div>
+                    <h3>Landing Pages</h3>
+                    <p>High-converting landing pages designed to capture leads and drive sales. A/B testing and analytics included.</p>
+                    <div class="service-price">From $79</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card">
+                    <div class="service-icon web">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Portfolio Websites</h3>
+                    <p>Showcase your client's work with stunning portfolio sites. Custom galleries, case studies, and client testimonials.</p>
+                    <div class="service-price">From $29</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+                
+                <!-- Service 4 -->
+                <div class="service-card">
+                    <div class="service-icon chatbot">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>AI Chatbots</h3>
+                    <p>Intelligent chatbots for websites that provide 24/7 customer support, lead qualification, and appointment scheduling.</p>
+                    <div class="service-price">From $29/mo</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+                
+                <!-- Service 5 -->
+                <div class="service-card">
+                    <div class="service-icon email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Automation</h3>
+                    <p>Set up automated email sequences, newsletters, and marketing campaigns that convert subscribers into customers.</p>
+                    <div class="service-price">From $19/mo</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+                
+                <!-- Service 6 -->
+                <div class="service-card">
+                    <div class="service-icon web">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>E-commerce Solutions</h3>
+                    <p>Complete online stores with product management, secure payment processing, and inventory tracking.</p>
+                    <div class="service-price">From $299</div>
+                    <a href="#contact" class="btn btn-secondary">Request Quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="process" class="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>How Our Process Works</h2>
+                <p>A seamless workflow that ensures you maintain complete control over client relationships while we handle the technical execution.</p>
+            </div>
+            
+            <div class="process-steps">
+                <!-- Step 1 -->
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>You Bring the Client</h3>
+                    <p>You secure the client and gather their requirements. We provide you with professional questionnaires and briefing templates.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>We Create the Solution</h3>
+                    <p>Our team builds the custom solution based on the client's needs. All work is done under your brand with no attribution to us.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>You Review & Deliver</h3>
+                    <p>We provide you with the finished product for review. You present it to the client as your own work and handle any feedback.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Ongoing Support</h3>
+                    <p>We provide ongoing support and maintenance to ensure your solution runs smoothly and stays up-to-date.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Transparent Pricing</h2>
+                <p>Choose from our standard packages or request a custom quote for larger projects.</p>
+            </div>
+            
+            <div class="pricing-options">
+                <!-- Basic Package -->
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">$99<span>/project</span></div>
+                    <p>Perfect for small business websites or simple landing pages</p>
+                    
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to 5 pages</li>
+                        <li><i class="fas fa-check"></i> Responsive design</li>
+                        <li><i class="fas fa-check"></i> Basic SEO setup</li>
+                        <li><i class="fas fa-check"></i> Contact form integration</li>
+                        <li><i class="fas fa-times"></i> No e-commerce functionality</li>
+                        <li><i class="fas fa-times"></i> No advanced animations</li>
+                    </ul>
+                    
+                    <a href="#contact" class="btn btn-secondary">Get Quote</a>
+                </div>
+                
+                <!-- Pro Package -->
+                <div class="pricing-card featured">
+                    <div class="featured-badge">Most Popular</div>
+                    <h3>Professional</h3>
+                    <div class="price">$199<span>/project</span></div>
+                    <p>Ideal for medium businesses with more complex requirements</p>
+                    
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to 15 pages</li>
+                        <li><i class="fas fa-check"></i> Custom design</li>
+                        <li><i class="fas fa-check"></i> Advanced SEO</li>
+                        <li><i class="fas fa-check"></i> CMS integration</li>
+                        <li><i class="fas fa-check"></i> Basic e-commerce (up to 50 products)</li>
+                        <li><i class="fas fa-check"></i> Interactive elements</li>
+                    </ul>
+                    
+                    <a href="#contact" class="btn btn-primary">Get Quote</a>
+                </div>
+                
+                <!-- Enterprise Package -->
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom<span>/quote</span></div>
+                    <p>For large-scale projects with advanced functionality</p>
+                    
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Unlimited pages</li>
+                        <li><i class="fas fa-check"></i> Full custom development</li>
+                        <li><i class="fas fa-check"></i> Advanced e-commerce</li>
+                        <li><i class="fas fa-check"></i> API integrations</li>
+                        <li><i class="fas fa-check"></i> AI chatbot integration</li>
+                        <li><i class="fas fa-check"></i> Ongoing maintenance</li>
+                    </ul>
+                    
+                    <a href="#contact" class="btn btn-secondary">Get Custom Quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Request a Custom Quote</h2>
+                <p>Tell us about your project requirements, and we'll provide a detailed quote for your custom solution.</p>
+            </div>
+            
+            <div class="contact-form">
+                <form id="quoteForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="agency">Agency Name</label>
+                            <input type="text" id="agency" class="form-control" placeholder="Your Agency LLC" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="john@youragency.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="(123) 456-7890">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="services">Services Needed</label>
+                        <select id="services" class="form-control" multiple>
+                            <option value="website">Business Website</option>
+                            <option value="landing">Landing Page</option>
+                            <option value="portfolio">Portfolio Website</option>
+                            <option value="chatbot">AI Chatbot</option>
+                            <option value="email">Email Automation</option>
+                            <option value="ecommerce">E-commerce Solution</option>
+                        </select>
+                        <small class="form-text">Hold Ctrl/Cmd to select multiple options</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">Project Budget</label>
+                        <select id="budget" class="form-control" required>
+                            <option value="" disabled selected>Select budget range</option>
+                            <option value="1-2k">$100 - $200</option>
+                            <option value="2-5k">$200 - $500</option>
+                            <option value="5-10k">$500 - $1,000</option>
+                            <option value="10k+">$1,000+</option>
+                            <option value="not-sure">Not sure yet</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="details">Project Details</label>
+                        <textarea id="details" class="form-control" rows="5" placeholder="Describe the project, timeline, and any specific requirements..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Request Quote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CoreLogic Labs</h3>
+                    <p>Professional digital solutions and custom development services. Building innovative software for businesses worldwide.</p>
+                    <p>No attribution. No branding. Just quality work delivered under your name.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#services">Business Websites</a></li>
+                        <li><a href="#services">Landing Pages</a></li>
+                        <li><a href="#services">Portfolio Websites</a></li>
+                        <li><a href="#services">AI Chatbots</a></li>
+                        <li><a href="#services">Email Automation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> hello@corelogiclabs.com</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Remote Worldwide</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Our Promise</h3>
+                    <p>Quality development, transparent communication, and reliable support. We deliver solutions that exceed expectations.</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CoreLogic Labs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
