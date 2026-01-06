@@ -30,25 +30,59 @@ exports.submitQuote = async (req, res, next) => {
         const mongooseState = require('mongoose').connection.readyState;
         console.log('Mongoose connection state:', mongooseState, '(0=disconnected, 1=connected, 2=connecting)');
         
+        let quote;
+        
         if (mongooseState !== 1) {
-            console.error('MongoDB not connected! Cannot save quote.');
-            return res.status(503).json({
-                status: 'error',
-                message: 'Database connection unavailable. Please try again in a moment.'
+            console.warn('MongoDB not connected! Using fallback storage.');
+            
+            // Fallback: Save to file system
+            const fs = require('fs');
+            const path = require('path');
+            const quotesFile = path.join(__dirname, '../quotes-backup.json');
+            
+            // Create quote object
+            quote = {
+                _id: Date.now().toString(),
+                name,
+                agencyName,
+                email,
+                phone,
+                services,
+                budget,
+                details,
+                status: 'pending',
+                createdAt: new Date(),
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent']
+            };
+            
+            // Save to backup file
+            try {
+                let quotes = [];
+                if (fs.existsSync(quotesFile)) {
+                    const data = fs.readFileSync(quotesFile, 'utf8');
+                    quotes = JSON.parse(data);
+                }
+                quotes.push(quote);
+                fs.writeFileSync(quotesFile, JSON.stringify(quotes, null, 2));
+                console.log('Quote saved to backup file:', quotesFile);
+            } catch (fileError) {
+                console.error('Failed to save to backup file:', fileError.message);
+            }
+        } else {
+            // Normal: Save to MongoDB
+            quote = await Quote.create({
+                name,
+                agencyName,
+                email,
+                phone,
+                services,
+                budget,
+                details,
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent']
             });
         }
-
-        const quote = await Quote.create({
-            name,
-            agencyName,
-            email,
-            phone,
-            services,
-            budget,
-            details,
-            ipAddress: req.ip,
-            userAgent: req.headers['user-agent']
-        });
 
         // Send emails (skip if email not configured)
         if (process.env.EMAIL_USER && process.env.EMAIL_USER !== 'yourbusiness@gmail.com') {
@@ -109,7 +143,7 @@ exports.submitQuote = async (req, res, next) => {
                     name: quote.name,
                     agencyName: quote.agencyName,
                     email: quote.email,
-                    services: quote.formattedServices,
+                    services: quote.formattedServices || services,
                     budget: quote.budget,
                     status: quote.status,
                     createdAt: quote.createdAt
