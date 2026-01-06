@@ -2,18 +2,29 @@ const Payment = require('../models/Payment');
 const Project = require('../models/Project');
 const paypalSDK = require('@paypal/checkout-server-sdk');
 
-// Configure PayPal SDK
-const { core } = require('@paypal/checkout-server-sdk');
-const Environment = core.SandboxEnvironment;
-const client = new core.PayPalHttpClient(
-  new Environment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET)
-);
+// Configure PayPal SDK only if credentials are provided
+let client = null;
+if (process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET && 
+    process.env.PAYPAL_CLIENT_ID !== 'test' && process.env.PAYPAL_CLIENT_SECRET !== 'test') {
+  const { core } = require('@paypal/checkout-server-sdk');
+  const Environment = process.env.PAYPAL_MODE === 'live' ? core.LiveEnvironment : core.SandboxEnvironment;
+  client = new core.PayPalHttpClient(
+    new Environment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET)
+  );
+}
 
 // @desc    Create PayPal order for payment
 // @route   POST /api/payments/create-order
 // @access  Private
 exports.createPayPalOrder = async (req, res) => {
   try {
+    if (!client) {
+      return res.status(503).json({
+        success: false,
+        message: 'PayPal is not configured. Please contact administrator.'
+      });
+    }
+    
     const { amount, projectId, description, customerEmail } = req.body;
     
     // Validate project exists
@@ -83,6 +94,13 @@ exports.createPayPalOrder = async (req, res) => {
 // @access  Private
 exports.capturePayPalPayment = async (req, res) => {
   try {
+    if (!client) {
+      return res.status(503).json({
+        success: false,
+        message: 'PayPal is not configured. Please contact administrator.'
+      });
+    }
+    
     const { orderId } = req.body;
     
     // Capture the order

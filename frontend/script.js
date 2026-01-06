@@ -56,17 +56,22 @@ if (quoteForm) {
     quoteForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        // Get selected services
+        const servicesSelect = document.getElementById('services');
+        const selectedServices = Array.from(servicesSelect.selectedOptions).map(option => option.value);
+        
         // Get form values
         const formData = {
             name: document.getElementById('name').value,
             agencyName: document.getElementById('agency').value,
             email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            services: Array.from(document.getElementById('services').selectedOptions)
-                .map(option => option.value),
+            phone: document.getElementById('phone').value || '',
+            services: selectedServices.length > 0 ? selectedServices : ['website'],
             budget: document.getElementById('budget').value,
-            details: document.getElementById('details').value
+            details: document.getElementById('details').value || ''
         };
+        
+        console.log('Submitting quote:', formData); // Debug log
         
         // Disable submit button and show loading state
         const submitBtn = this.querySelector('button[type="submit"]');

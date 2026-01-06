@@ -8,7 +8,7 @@ const quoteValidationRules = [
     body('name').trim().notEmpty().withMessage('Name is required'),
     body('agencyName').trim().notEmpty().withMessage('Agency name is required'),
     body('email').isEmail().withMessage('Please provide a valid email'),
-    body('services').isArray({ min: 1 }).withMessage('At least one service must be selected'),
+    body('services').optional().isArray().withMessage('Services must be an array'),
     body('budget').isIn(['1-2k', '2-5k', '5-10k', '10k+', 'not-sure']).withMessage('Please select a valid budget range'),
     body('details').optional().trim().isLength({ max: 2000 }).withMessage('Details cannot exceed 2000 characters')
 ];
