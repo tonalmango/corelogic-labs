@@ -66,9 +66,18 @@ const initQuoteForm = () => {
         console.log('Form submitted!');
         e.preventDefault();
         
-        // Get selected services
+        // Get selected services with null check
         const servicesSelect = document.getElementById('services');
-        const selectedServices = Array.from(servicesSelect.selectedOptions).map(option => option.value);
+        let selectedServices = ['website']; // Default value
+        
+        if (servicesSelect && servicesSelect.selectedOptions) {
+            selectedServices = Array.from(servicesSelect.selectedOptions).map(option => option.value);
+            if (selectedServices.length === 0) {
+                selectedServices = ['website']; // Fallback to default
+            }
+        }
+        
+        console.log('Selected services:', selectedServices);
         
         // Get form values
         const formData = {
@@ -76,7 +85,7 @@ const initQuoteForm = () => {
             agencyName: document.getElementById('agency').value,
             email: document.getElementById('email').value,
             phone: document.getElementById('phone').value || '',
-            services: selectedServices.length > 0 ? selectedServices : ['website'],
+            services: selectedServices,
             budget: document.getElementById('budget').value,
             details: document.getElementById('details').value || ''
         };
