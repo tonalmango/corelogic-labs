@@ -51,9 +51,19 @@ if (document.readyState === 'loading') {
 
 // ===== Form Submission =====
 // Form submission with API call
-const quoteForm = document.getElementById('quoteForm');
-if (quoteForm) {
+const initQuoteForm = () => {
+    console.log('Initializing quote form...');
+    const quoteForm = document.getElementById('quoteForm');
+    console.log('Quote form element:', quoteForm);
+    
+    if (!quoteForm) {
+        console.error('Quote form not found!');
+        return;
+    }
+    
+    console.log('Adding submit event listener to quote form');
     quoteForm.addEventListener('submit', async function(e) {
+        console.log('Form submitted!');
         e.preventDefault();
         
         // Get selected services
@@ -128,6 +138,36 @@ if (quoteForm) {
             submitBtn.disabled = false;
         }
     });
+};
+
+// Initialize quote form on page load
+console.log('Script loaded, DOM state:', document.readyState);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initQuoteForm();
+        // Also add click listener to button as debug
+        const submitBtn = document.querySelector('#quoteForm button[type="submit"]');
+        if (submitBtn) {
+            console.log('Submit button found:', submitBtn);
+            submitBtn.addEventListener('click', (e) => {
+                console.log('Button clicked! Event:', e);
+            });
+        } else {
+            console.error('Submit button not found!');
+        }
+    });
+} else {
+    initQuoteForm();
+    // Also add click listener to button as debug
+    const submitBtn = document.querySelector('#quoteForm button[type="submit"]');
+    if (submitBtn) {
+        console.log('Submit button found:', submitBtn);
+        submitBtn.addEventListener('click', (e) => {
+            console.log('Button clicked! Event:', e);
+        });
+    } else {
+        console.error('Submit button not found!');
+    }
 }
 
 // Helper function to show notifications
