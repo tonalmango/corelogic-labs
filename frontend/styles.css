@@ -499,6 +499,16 @@ nav {
     margin-right: 0.8rem;
 }
 
+/* Contact Section */
+.contact {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.contact .section-header {
+    margin-bottom: 4rem;
+}
+
 /* Contact Form */
 .contact-form {
     background-color: white;
@@ -539,6 +549,13 @@ nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+}
+
+.form-text {
+    display: block;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.3rem;
 }
 
 /* Footer */
