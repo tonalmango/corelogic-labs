@@ -1,7 +1,17 @@
 const winston = require('winston');
 const path = require('path');
+const fs = require('fs');
 
 const logsDir = path.join(__dirname, '../logs');
+
+// Create logs directory if it doesn't exist
+if (!fs.existsSync(logsDir)) {
+    try {
+        fs.mkdirSync(logsDir, { recursive: true });
+    } catch (err) {
+        console.error('Could not create logs directory:', err);
+    }
+}
 
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || 'info',

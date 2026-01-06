@@ -71,17 +71,27 @@ app.use((req, res, next) => {
     next();
 });
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogiclabs', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => {
-    logger.info('MongoDB connected successfully');
-})
-.catch(err => {
-    logger.error('MongoDB connection error: ' + err.message);
-    process.exit(1);
-});
+// Connect to MongoDB
+console.log('Attempting MongoDB connection...');
+try {
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogiclabs', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log('✓ MongoDB connected successfully');
+        logger.info('MongoDB connected successfully');
+    })
+    .catch(err => {
+        console.error('✗ MongoDB connection error:', err.message);
+        logger.error('MongoDB connection error: ' + err.message);
+        logger.warn('Continuing without database - some features may be limited');
+        // Don't exit - allow server to run even without MongoDB
+    });
+} catch (err) {
+    console.error('MongoDB connection exception:', err.message);
+    logger.error('MongoDB connection exception: ' + err.message);
+}
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/quotes', quoteRoutes);
@@ -112,9 +122,17 @@ app.use('*', (req, res) => {
 
 app.use(errorMiddleware);
 
+// Catch all errors
+process.on('uncaughtException', (err) => {
+    console.error('CRITICAL ERROR - Uncaught Exception:', err);
+    logger.error('Uncaught Exception: ' + err.message);
+});
+
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-    logger.info(`Server started on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+    const msg = `Server started on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`;
+    console.log(msg); // Also log to console
+    logger.info(msg);
 });
 
 // Graceful shutdown
