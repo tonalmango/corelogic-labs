@@ -81,6 +81,9 @@ if (quoteForm) {
         
         try {
             // Send data to backend
+            console.log('API_BASE_URL:', API_BASE_URL); // Debug URL
+            console.log('Posting to:', `${API_BASE_URL}/quotes`); // Debug endpoint
+            
             const response = await fetch(`${API_BASE_URL}/quotes`, {
                 method: 'POST',
                 headers: {
@@ -89,7 +92,11 @@ if (quoteForm) {
                 body: JSON.stringify(formData)
             });
             
+            console.log('Response status:', response.status); // Debug response
+            console.log('Response ok:', response.ok); // Debug ok flag
+            
             const data = await response.json();
+            console.log('Response data:', data); // Debug full response
             
             if (response.ok) {
                 // Show success message
@@ -112,7 +119,8 @@ if (quoteForm) {
                 }
             }
         } catch (error) {
-            // Error handled - silent in production
+            // Error handled - log for debugging
+            console.error('Form submission error:', error); // Debug error
             showNotification('error', 'Network error. Please check your connection and try again.');
         } finally {
             // Reset button state

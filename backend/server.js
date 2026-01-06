@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
 
 const quoteRoutes = require('./routes/quoteRoutes');
@@ -104,6 +105,9 @@ app.use('/api/analytics', analyticsRoutes);
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
+// Serve frontend files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'success',
@@ -113,11 +117,17 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-app.use('*', (req, res) => {
-    res.status(404).json({
-        status: 'error',
-        message: `Cannot ${req.method} ${req.originalUrl}`
-    });
+// Serve index.html for all non-API routes (client-side routing)
+app.get('*', (req, res) => {
+    // Only serve index.html for GET requests that aren't API calls
+    if (!req.originalUrl.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    } else {
+        res.status(404).json({
+            status: 'error',
+            message: `Cannot ${req.method} ${req.originalUrl}`
+        });
+    }
 });
 
 app.use(errorMiddleware);
