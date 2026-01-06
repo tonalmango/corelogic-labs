@@ -1,8 +1,13 @@
-# CoreLogic Labs Platform
+# 🚀 CoreLogic Labs - Agency Management Platform
 
-> Production-ready full-stack platform for managing client quotes, contacts, projects, payments, and analytics with secure admin authentication and comprehensive API.
+> Complete full-stack solution for managing client quotes, projects, payments, and analytics. Production-ready with JWT authentication, PayPal integration, and secure admin dashboard.
 
-## 🚀 Features
+## � Documentation
+
+- **[SETUP.md](SETUP.md)** - Complete setup and configuration guide
+- **[API.md](API.md)** - API endpoints reference documentation
+
+## �🚀 Features
 
 ### Core Features
 - **JWT Authentication** - Secure user authentication with bcrypt password hashing
