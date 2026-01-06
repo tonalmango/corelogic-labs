@@ -8,6 +8,10 @@ require('dotenv').config();
 const quoteRoutes = require('./routes/quoteRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const authRoutes = require('./routes/authRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const logger = require('./config/logger');
 
@@ -82,6 +86,13 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corelogic
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/quotes', quoteRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/analytics', analyticsRoutes);
+
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({

@@ -1,16 +1,23 @@
 # CoreLogic Labs Platform
 
-> Production-ready full-stack platform for managing client quotes and contacts with secure admin authentication and comprehensive API.
+> Production-ready full-stack platform for managing client quotes, contacts, projects, payments, and analytics with secure admin authentication and comprehensive API.
 
 ## 🚀 Features
 
+### Core Features
 - **JWT Authentication** - Secure user authentication with bcrypt password hashing
 - **Admin Dashboard** - Real-time quote and contact management interface
 - **Rate Limiting** - 5 attempts/15min on auth, 100/15min on general API
 - **Security Hardening** - Helmet CSP headers, CORS restrictions, input validation
 - **Logging & Monitoring** - Winston logger with file rotation and request tracking
 - **Graceful Shutdown** - Proper SIGTERM/SIGINT handlers for zero-downtime deployments
-- **Production Ready** - Environment-based configuration with deployment guides
+
+### ✨ New Features (v2.0)
+- **📊 Project Management** - Track ongoing projects with milestones, progress, and status updates
+- **📁 File Upload System** - Client file uploads for design assets (images, PDFs, docs, archives)
+- **💳 Payment Integration** - PayPal payment processing with automatic budget tracking
+- **📈 Advanced Analytics** - Comprehensive dashboard with metrics, trends, and data export
+- **🎨 Custom Favicon** - Professional browser tab icon
 
 ## 📋 Tech Stack
 
@@ -19,6 +26,8 @@
 - MongoDB with Mongoose ODM
 - JWT (jsonwebtoken) for authentication
 - bcryptjs for password hashing
+- **@paypal/checkout-server-sdk** for payment processing ✨ NEW
+- **Multer** for file uploads ✨ NEW
 - Winston v3.10.0 for logging
 - Helmet, express-rate-limit, CORS for security
 
@@ -26,12 +35,14 @@
 - Vanilla JavaScript with runtime API detection
 - Responsive admin dashboard
 - Auto-refresh data tables
+- **Custom SVG favicon** ✨ NEW
 
 ## 🛠️ Quick Start (Development)
 
 ### Prerequisites
 - Node.js v20+ installed
 - MongoDB v8.2+ running (localhost:27017 or Atlas)
+- **PayPal account** (for payment features) ✨ NEW
 
 ### Installation
 
@@ -48,6 +59,7 @@ npm install
 cp .env.example .env
 
 # Update .env with your values (see Environment Variables section)
+```
 # At minimum, set JWT_SECRET and MONGODB_URI
 
 # Start the development server
@@ -91,6 +103,11 @@ Create a `.env` file in the `/backend` directory:
 | `EMAIL_FROM` | No | `noreply@corelogiclabs.com` | Sender email address |
 | `API_RATE_LIMIT` | No | `100` | General API rate limit (requests per 15min) |
 | `LOG_LEVEL` | No | `info` | Logging level (`error`, `warn`, `info`, `debug`) |
+| ✨ `PAYPAL_CLIENT_ID` | Yes* | - | PayPal client ID (for payments) |
+| ✨ `PAYPAL_CLIENT_SECRET` | Yes* | - | PayPal client secret |
+| ✨ `PAYPAL_MODE` | No | `sandbox` | PayPal mode (sandbox or live) |
+
+*Required only if using payment features
 
 ### Example .env File
 
@@ -111,6 +128,11 @@ EMAIL_FROM=noreply@corelogiclabs.com
 
 # JWT Secret - Generate with: openssl rand -base64 32
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars-long-random-string
+
+# ✨ NEW: PayPal Payment Integration
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+PAYPAL_MODE=sandbox
 
 API_RATE_LIMIT=100
 LOG_LEVEL=info
@@ -187,8 +209,41 @@ frontend/
 - `PATCH /:id` - Mark contact as read (admin)
 - `DELETE /:id` - Delete contact (admin)
 
+### ✨ Projects (`/api/projects`) - NEW - All protected
+- `GET /` - List all projects
+- `POST /` - Create new project
+- `GET /stats` - Get project statistics
+- `GET /:id` - Get project details
+- `PUT /:id` - Update project
+- `DELETE /:id` - Delete project
+- `POST /:id/milestones` - Add milestone
+- `PUT /:id/milestones/:milestoneId` - Update milestone
+- `POST /:id/notes` - Add project note
+
+### ✨ File Uploads (`/api/upload`) - NEW - All protected
+- `POST /project/:projectId` - Upload files to project (max 10 files, 10MB each)
+- `POST /quote/:quoteId` - Upload files to quote
+- `GET /file/:filename` - Download file
+- `DELETE /project/:projectId/file/:fileId` - Delete file
+
+### ✨ Payments (`/api/payments`) - NEW
+- `POST /create-order` - Create PayPal order (protected)
+- `POST /capture` - Capture PayPal payment (protected)
+- `GET /` - List all payments (protected)
+- `GET /project/:projectId` - Get payments by project (protected)
+- `POST /manual` - Record manual payment (protected)
+- `GET /stats` - Payment statistics (protected)
+
+### ✨ Analytics (`/api/analytics`) - NEW - All protected
+- `GET /dashboard?startDate=&endDate=` - Complete dashboard metrics
+- `GET /performance` - Performance KPIs
+- `GET /clients` - Client insights
+- `GET /export?format=json|csv` - Export analytics data
+
 ### Health Check
 - `GET /api/health` - API health status
+
+**📖 Full API documentation:** See [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
 
 ## 🔒 Security Features
 
