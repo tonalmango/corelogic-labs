@@ -12,7 +12,7 @@ exports.submitQuote = async (req, res, next) => {
             });
         }
 
-        const { name, agencyName, email, phone, services, budget, details } = req.body;
+        const { name, agencyName, email, services, budget, details } = req.body;
 
         console.log('Creating quote with data:', { name, agencyName, email, services, budget });
         
@@ -36,7 +36,6 @@ exports.submitQuote = async (req, res, next) => {
                 name,
                 agencyName,
                 email,
-                phone,
                 services,
                 budget,
                 details,
@@ -65,7 +64,6 @@ exports.submitQuote = async (req, res, next) => {
                 name,
                 agencyName,
                 email,
-                phone,
                 services,
                 budget,
                 details,
@@ -108,7 +106,6 @@ exports.submitQuote = async (req, res, next) => {
                     <p><strong>Name:</strong> ${name}</p>
                     <p><strong>Agency:</strong> ${agencyName}</p>
                     <p><strong>Email:</strong> ${email}</p>
-                    <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
                     <p><strong>Services:</strong> ${services.join(', ')}</p>
                     <p><strong>Budget:</strong> ${budget}</p>
                     <p><strong>Details:</strong><br>${details || 'No additional details'}</p>

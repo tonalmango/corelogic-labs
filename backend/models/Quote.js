@@ -18,10 +18,6 @@ const quoteSchema = new mongoose.Schema({
         trim: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
     },
-    phone: {
-        type: String,
-        trim: true
-    },
     services: [{
         type: String,
         enum: ['website', 'landing', 'portfolio', 'chatbot', 'email', 'ecommerce'],

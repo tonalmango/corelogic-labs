@@ -160,7 +160,6 @@ const initQuoteForm = () => {
             name: document.getElementById('name').value,
             agencyName: document.getElementById('agency').value,
             email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value || '',
             services: selectedServices,
             budget: document.getElementById('budget').value,
             details: document.getElementById('details').value || ''
