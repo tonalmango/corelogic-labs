@@ -1,16 +1,6 @@
 const Contact = require('../models/Contact');
 const { validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT === '465',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    }
-});
+const { sendMail } = require('../utils/mailer');
 
 exports.submitContact = async (req, res, next) => {
     try {
@@ -33,8 +23,7 @@ exports.submitContact = async (req, res, next) => {
             userAgent: req.headers['user-agent']
         });
 
-        await transporter.sendMail({
-            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
+        await sendMail({
             to: email,
             subject: 'Thank You for Contacting Us',
             html: `
@@ -55,8 +44,7 @@ exports.submitContact = async (req, res, next) => {
             `
         });
 
-        await transporter.sendMail({
-            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
+        await sendMail({
             to: process.env.EMAIL_USER,
             subject: 'New Contact Form Submission',
             html: `

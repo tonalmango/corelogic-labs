@@ -1,16 +1,6 @@
 const Quote = require('../models/Quote');
 const { validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT === '465',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    }
-});
+const { sendMail } = require('../utils/mailer');
 
 exports.submitQuote = async (req, res, next) => {
     try {
@@ -87,8 +77,7 @@ exports.submitQuote = async (req, res, next) => {
         // Send emails (skip if email not configured)
         if (process.env.EMAIL_USER && process.env.EMAIL_USER !== 'yourbusiness@gmail.com') {
             try {
-                await transporter.sendMail({
-            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
+                await sendMail({
             to: email,
             subject: 'Your Quote Request Received',
             html: `
@@ -110,8 +99,7 @@ exports.submitQuote = async (req, res, next) => {
             `
         });
 
-        await transporter.sendMail({
-            from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
+        await sendMail({
             to: process.env.EMAIL_USER,
             subject: 'New Quote Request Submitted',
             html: `
@@ -226,8 +214,7 @@ exports.updateQuote = async (req, res, next) => {
         }
         
         if (status === 'quoted' && quoteAmount) {
-            await transporter.sendMail({
-                from: `"CoreLogic Labs" <${process.env.EMAIL_FROM}>`,
+            await sendMail({
                 to: quote.email,
                 subject: 'Your Custom Quote is Ready',
                 html: `
