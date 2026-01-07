@@ -432,9 +432,11 @@ nav {
 
 .pricing-options {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .pricing-card {
@@ -685,10 +687,11 @@ footer {
     }
     
     .services-grid,
-    .pricing-grid {
+    .pricing-grid,
+    .pricing-options {
         grid-template-columns: 1fr;
         gap: 2rem;
-        max-width: 500px;
+        max-width: 100%;
         margin: 0 auto;
     }
     
@@ -705,6 +708,10 @@ footer {
     .container {
         padding: 0 1.5rem;
         max-width: 100%;
+    }
+    
+    .pricing-card {
+        padding: 2rem 1.5rem;
     }
     
     h1 {
